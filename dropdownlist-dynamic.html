@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+    <select id="sel" ><option value="">請選擇</option></select>
+    <div id="drplist"></div>
+   
+    <script>
+        //資料
+        var TagJsonData=[{tag:"select",id:"test1"},{tag:"select",id:"test2"}];
+        var JsonData = [{ val: "1", txt: "我是項目01" }, { val: "2", txt: "我是項目02" }, { val: "3", txt: "我是項目03" }];
+        
+        //樣板 option
+        var OptUi = '';
+            JsonData.forEach(element => {
+                OptUi += `<option value="${element.val}">${element.txt}</option>`;
+            });
+        //樣板 select
+        var SelUi='';
+        TagJsonData.forEach(el => {
+                if (el.tag === 'select') {
+                    SelUi += `<select id="${el.id}" class="drp" ><option value="">請選擇</option></select>`;                   
+                }                
+            });
+
+        $(function () {
+                //產生dropdown無資料內容
+                $("#drplist").append(SelUi);
+
+                $(".drp").on("click", function (e) {
+                    e.preventDefault();                   
+                    //console.log($("#" + this.id + " option").length);
+                    if ($("#" + this.id + " option").length == 1) {
+                        //console.log(OptUi);
+                        if (OptUi !== "") {
+                            $(this).append(OptUi);
+                        }
+                    }
+                });
+                
+                //在測試效果
+                /* $("#sel").on("click", function (e) {
+                    e.preventDefault();                   
+                    console.log(OptUi);
+                    if (OptUi !== "") {
+                        $(this).append(OptUi);
+                    }
+                }); */
+            })
+        
+    </script>    
+</body>
+</html>

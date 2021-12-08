@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bootstrap-table-內嵌入輸入元件、下拉元件、CHECKBOX-撈取異動資料</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css">
+</head>
+<body>    
+    <table id="table">
+        <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="name">Item Name</th>
+                <th data-field="inputtest">Item Price</th>
+            </tr>
+        </thead>
+    </table>
+    <input type="button" id="GetTableData" value="取得全數資料"><input type="button" id="GetTableDataIndex" value="取得index">
+    <textarea id="AllJsonResult" style="width:100%;height:200px">英數字</textarea>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+    <script>
+        var $table = $('#table');
+        var data = [
+            { 'id': 0, 'name': 'Item 0', 'inputtest': 'test0', 'Result': '2','DOC1':1,'DOC2':0,'DOC3':0,'drpRes':'' },
+            { 'id': 1, 'name': 'Item 1', 'inputtest': 'test1', 'Result': '1','DOC1':1,'DOC2':1,'DOC3':0,'drpRes':'1'},
+            { 'id': 2, 'name': 'Item 2', 'inputtest': 'test2', 'Result': '3','DOC1':1,'DOC2':0,'DOC3':1,'drpRes':'2'},
+            { 'id': 3, 'name': 'Item 0', 'inputtest': 'test0', 'Result': '2','DOC1':1,'DOC2':0,'DOC3':0,'drpRes':'3'},
+            { 'id': 4, 'name': 'Item 1', 'inputtest': 'test1', 'Result': '1','DOC1':1,'DOC2':1,'DOC3':1,'drpRes':'4'},
+            { 'id': 5, 'name': 'Item 2', 'inputtest': 'test2', 'Result': '3','DOC1':1,'DOC2':0,'DOC3':0,'drpRes':'5' },          
+        ];
+        var cols = [
+            { field: 'id', title: '序號' ,'width':100, visible: false },
+            { field: 'name', title: '名稱','width':100 },
+            { field: 'inputtest', title: '輸入測試','width':300,formatter: "$Uiinputtest.OperateFormatter",events: "$Uiinputtest.OperateEvents"},
+            { field: "Result", title: "檢查結果",'width':100, formatter: "$UiResult.OperateFormatter", events: "$UiResult.OperateEvents" },
+            { field: "DOC1",title: "文件1",'width':100,formatter: "$UIDOC1.OperateFormatter", events: "$UIDOC1.OperateEvents" },
+            { field: "DOC2",title: "文件2",'width':100,formatter: "$UIDOC2.OperateFormatter", events: "$UIDOC2.OperateEvents" },
+            { field: "DOC3",title: "文件3",'width':100,formatter: "$UIDOC3.OperateFormatter", events: "$UIDOC3.OperateEvents" },
+            { field: "drpRes",title: "結果選擇",'width':100,formatter: "$UIselect.OperateFormatter", events: "$UIselect.OperateEvents" },
+        ];
+
+        //我要複製一份資料並增加一個欄位當作識別，存檔時直接撈rowtpe不是N************
+        var tpe={rowtpe:'N'};
+        var copydata=[]; 
+        
+        //var copydata=JSON.parse(JSON.stringify(data))
+        //copydata.map(x=>{Object.assign(x,tpe)});
+        data.forEach(function(itm){
+            copydata.push($.extend({},itm,tpe));//物件合併
+        });
+        // console.log(JSON.stringify(copydata));
+        // console.log(JSON.stringify(data));
+        //***********************************************
+        
+        var ddlist=[{ val: '', txt: '請選擇' },{ val: '1', txt: '符合' }, { val: '2', txt: '建議事項' }, { val: '3', txt: '缺失' }, { val: '4', txt: '不符合' }, { val: '5', txt: '不適用' }];
+        var rdolist = [{ val: '1', txt: '符合' }, { val: '2', txt: '不符合' }, { val: '3', txt: '不適用' }];
+        //bootstrapTable 內嵌元件
+        function OperateFormatterFunc(value, row, index, element,colname) {
+                let res = '';
+                let elid ='';
+                switch (element) {
+                    case 'checkbox':
+                        elid = `chk-${colname}-${index}`;
+                        res = `<input type="checkbox" id="${elid}" class="chk" ${value===1?checked="checked":""}>`;
+                        break;
+                    case 'textarea':
+                        elid = `txt-${index}`;
+                        res = `<textarea id="${elid}" class="txt" name="${elid}" style="width:100%;height:100px">${value}</textarea>`;
+                        //res = `<input type="text" id="${elid}" class="txt" name="${elid}" style="width:100%;height:100px" value="${value}">`;
+                        break;
+                    case 'radio':
+                        rdolist.forEach(
+                            itm => {
+                                elid = `${String(index) + '-' + itm.val}`;
+                                res += `<input type="radio" class="rdo" id="${elid}" name="gp${index}" value="${itm.val}" ${itm.val === row.Result? checked="checked":""}><label for="${elid}">${itm.txt}</label><br>`;
+                               
+                            });
+                        break;
+                    case 'dropdownlist':
+                       elid = `drp-${index}`;
+                       res=`<select id="${elid}" class="drp">`
+                        ddlist.forEach(itm=>{                      
+                            res+=`<option value="${itm.val}" ${itm.val === row.drpRes? selected="selected":""}>${itm.txt}</option>`;                       
+                       });
+                       res+=`</select>`
+                    break;
+                    default:
+                       res = '';
+                        break;
+                }
+                return res;
+            }
+         
+         //bootstrapTable 操作內嵌元件取值
+         function OperateEventsFunc(e, value, row, index, key) {
+                let elname = '';
+                let newVal = '';
+
+                switch (key) {
+                    case 'Result':
+                        elname = `input[type=radio][name=gp${index}]:checked`;
+                        newVal = $(elname).val();
+                        break;
+                    case 'inputtest':
+                        elname = `#txt-${index}`;
+                        newVal = $(elname).val();
+                        break;
+                    case 'DOC1':
+                    case 'DOC2':
+                    case 'DOC3':
+                        elname = `#chk-${key}-${index}`;                       
+                        newVal = $(elname).prop('checked')==true? 1:0;                      
+                        break;
+                    case 'drpRes':
+                        elname = `#drp-${index} option:selected`;
+                        newVal =$(elname).val();
+                    default:
+                        break;
+                };
+                //console.log(`elname:${elname},newVal:${newVal}`);
+                dataUpdate(index, key, newVal, row);
+            }
+        
+        //這更新不是爭對原始資料來做更新，而是副本的資料和原始資料比對，有異動過就標記，好處可以在存檔時，撈出有異動過的就可以
+        function dataUpdate(idx,key,val,row){
+            //必要時可以把row丟過來比對資料確認有異動，因為ROW是最原始的資料
+            copydata[idx][key]=val;
+            //copydata[idx]["rowtpe"]="U";
+            //比對異動
+            if(row.Result !=copydata[idx].Result 
+             || row.inputtest!=copydata[idx].inputtest
+             || row.DOC1!=copydata[idx].DOC1 
+             || row.DOC2!=copydata[idx].DOC2 
+             || row.DOC3!=copydata[idx].DOC3
+             || row.drpRes!= copydata[idx].drpRes)
+            copydata[idx].rowtpe='U';
+            else
+            copydata[idx].rowtpe='N';
+        }
+
+        //drpRes:select
+        var $UIselect={
+            OperateFormatter:function (value, row, index) {            
+                return OperateFormatterFunc(value, row, index,'dropdownlist','drpRes');
+                //return res;
+            },
+            OperateEvents: {'change .drp':function(e, value, row, index){
+                OperateEventsFunc(e, value, row, index,'drpRes');
+            }}
+        };
+        //DOC1:checkbox
+        var $UIDOC1={
+            OperateFormatter:function (value, row, index) {             
+                return OperateFormatterFunc(value, row, index,'checkbox','DOC1');
+                //return res;
+            },
+            OperateEvents: {'click .chk':function(e, value, row, index){
+                OperateEventsFunc(e, value, row, index,'DOC1');
+            }}
+        };
+         //DOC2:checkbox
+         var $UIDOC2={
+            OperateFormatter:function (value, row, index) {                
+                return OperateFormatterFunc(value, row, index,'checkbox','DOC2');
+                //return res;
+            },
+            OperateEvents: {'click .chk':function(e, value, row, index){
+                OperateEventsFunc(e, value, row, index,'DOC2');
+            }}
+        };
+         //DOC2:checkbox
+         var $UIDOC3={
+            OperateFormatter:function (value, row, index) {
+                //let res=`<input type="checkbox" id="chk-${index}" class="chk" >`;
+                return OperateFormatterFunc(value, row, index,'checkbox','DOC3');
+                //return res;
+            },
+            OperateEvents: {'click .chk':function(e, value, row, index){
+                OperateEventsFunc(e, value, row, index,'DOC3');
+            }}
+        };
+        //inputtest:textarea
+        var $Uiinputtest = {
+            OperateFormatter:function (value, row, index) {
+                //console.log('Row'+index);console.log('Create-textarea');               
+                return OperateFormatterFunc(value, row, index,'textarea','inputtest');
+                //return res;
+            }, 
+            OperateEvents: {               
+                 'blur .txt':function (e, value, row, index) {
+                     OperateEventsFunc(e, value, row, index,'inputtest');
+                 }           
+            }
+        };       
+        //Result:radio
+        var $UiResult = {
+                OperateFormatter: function (value, row, index) {
+                    //console.log('Row'+index); console.log('Create-Radio');
+                    let res = OperateFormatterFunc(value, row, index,'radio','Result');;                    
+                    return res
+                },
+                OperateEvents: {
+                    'change .rdo': function (e, value, row, index) {
+                        OperateEventsFunc(e, value, row, index, 'Result');
+                    }
+                }
+            };
+
+        
+         // 直接異動bootstrapTable,其實UI每一列都會被重寫一次,這樣沒辦法很連續操作table裡的元件，        
+         // 這寫法適合跳出POP視窗，然後異動table        
+        function GridRowCRUD(idx, val, fid, row, key) {
+                switch (key) {
+                    case 'U':
+                        $table.bootstrapTable('updateCell', { index: idx, field: fid, value: val });
+                        //console.log( JSON.stringify($table.bootstrapTable('getData')) );
+                        break;
+                    case 'I':
+                        $table.bootstrapTable('insertRow', { index: idx, row: row });
+                        break;
+                    case 'D':
+                        $table.bootstrapTable('remove', { field: fid, values: val });
+                        break;
+                    default:
+                        break;
+                }
+            }
+        
+        $(function () {
+                $('#GetTableData').click(function (e) {
+                    e.preventDefault(); 
+                    //JQUERY 提供方法 篩選資料                
+                    var ResList = $.grep(copydata, function(item, index) {   return item.rowtpe === 'U';   });
+                    
+                    let ResJSONString=JSON.stringify(ResList);
+                    $("#AllJsonResult").val(ResJSONString);
+                });
+                $('#GetTableDataIndex').click(function(e){
+                   
+                    console.log(ResIndex);
+                });
+                //初始化
+                $table.bootstrapTable({
+                    columns: cols,
+                    data: data
+                });
+            });
+    </script>
+</body>
+</html>

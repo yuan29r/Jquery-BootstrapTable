@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>table-dropdownlist-dynamic</title>
+</head>
+<body>
+    <input type="button" id="btnadd" value="add row" >
+    <table id="producttable">
+        <thead>
+            <tr>
+                <td>代號</td>
+                <td>名稱</td>
+            </tr>
+            <tr id="tableRowTmp" style="display: none;"><td>欄位1</td><td>欄位2</td></tr>
+        </thead>
+        <tbody>
+            <!-- existing data could optionally be included here -->           
+        </tbody>      
+    </table>   
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        var tableRowTmpl=`<tr><td></td><td></td></tr>`;
+        $(function () {
+                var idx=0
+                $("#btnadd").on("click", function () {
+ 
+                    var tmp = $("#tableRowTmp").clone();
+                    tmp.removeAttr("style");
+                    tmp.attr("id",`Row_${idx}`);
+                    tmp.attr("data-id",`Row_${idx}`);
+                    console.log(tmp);
+                    tmp.appendTo("#producttable tbody");
+                    idx++
+                });
+            });
+        
+    </script>
+</body>
+
+</html>

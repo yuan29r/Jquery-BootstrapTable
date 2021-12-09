@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,13 +14,19 @@
             item0:{
                 a:'test1',
                 b:'test2',
-                 fn01:function(){ return this.a+this.b;  },
-                 
+                 fn01:function(){ return this.a+'-'+this.b;  },
+                 fn02:function(){ return obj.item02.fn01();}                 
+        },
+        item02:{
+            a:5,
+            b:9,
+            fn01:function(){ return this.a+this.b;},
+            c:function(){ return this.fn01()} ,
         }
 
         
     }
-    alert(obj.item0.fn01);
+    alert(obj.item02.c());
     </script>
 </body>
 </html>

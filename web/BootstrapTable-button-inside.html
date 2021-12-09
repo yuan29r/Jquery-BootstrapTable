@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <table id="table0">
+    <table id="table0" class="NotVisiable">
         <thead>
             <tr>
                 <th data-field="id">序號</th>
@@ -189,10 +189,14 @@
                         break;
                 }
             }
+            
         $(function () {
-             //初始化
-             $table0.bootstrapTable({ columns: cols0,  data: data0  });
-        });
+                $.getJSON("data/table0.json", function (json) {
+                    console.log(json); // this will show the info it in firebug console
+                });
+                //初始化
+                //$table0.bootstrapTable({ columns: cols0,  data: data0  });
+            });
     </script>
 </body>
 </html>

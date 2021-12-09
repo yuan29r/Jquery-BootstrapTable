@@ -12,15 +12,15 @@
     <script>
         var obj={
             item0:{
-                'a':'test1',
-                'b':'test2',
-                 fn01:{function(){ return a+b;  }},
-                 c:function(){ return this.fn01;}
+                a:'test1',
+                b:'test2',
+                 fn01:function(){ return this.a+this.b;  },
+                 
         }
 
         
     }
-    alert(obj.item0.c);
+    alert(obj.item0.fn01);
     </script>
 </body>
 </html>

@@ -25,9 +25,8 @@
     <script>
         var tableRowTmpl=`<tr><td></td><td></td></tr>`;
         $(function () {
-                var idx=0
-                $("#btnadd").on("click", function () {
- 
+                var idx=0;
+                $("#btnadd").on("click", function () { 
                     var tmp = $("#tableRowTmp").clone();
                     tmp.removeAttr("style");
                     tmp.attr("id",`Row_${idx}`);

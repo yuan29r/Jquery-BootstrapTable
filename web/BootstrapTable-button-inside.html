@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TABLE 連動顯示</title>
+    <title>bootstrap-table-button</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css">
+    <style>
+        .NotVisiable {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <table id="table0">
+        <thead>
+            <tr>
+                <th data-field="id">序號</th>
+                <th data-field="itemName">Item Name</th>
+                <th data-field="itemVersion">Item Version</th>
+            </tr>
+        </thead>
+    </table>
+    <table id="table1" class="NotVisiable">
+        <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="itemName">Item Name</th>
+                <th data-field="itemVersion">Item Price</th>
+            </tr>
+        </thead>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+    <script>
+        var $table0 = $('#table0');
+        var $table1 = $('#table1');
+        var data0 = [
+           { 'id': 0, 'itemName': 'Item 0', 'itemVersion': 'test0' },
+           { 'id': 1, 'itemName': 'Item 1', 'itemVersion': 'test1' },
+           { 'id': 2, 'itemName': 'Item 2', 'itemVersion': 'test2' },
+           { 'id': 3, 'itemName': 'Item 3', 'itemVersion': 'test3' },
+        ];
+        var cols0 = [
+            { field: 'id', title: '序號' ,'width':100 },
+            { field: 'itemName', title: 'Item Name','width':100 },
+            { field: 'itemVersion', title: 'Item Version','width':100 },  
+            { field: 'Actions', title: '功能','width':300,formatter: "$UiAction.table.table0.OperateFormatter",events: "$UiAction.table.table0.OperateEvents"}              
+        ];
+        var data1 = [
+           { 'id': 0, 'itemName': 'Item 00', 'itemVersion': 'test00' },
+           { 'id': 1, 'itemName': 'Item 01', 'itemVersion': 'test01' },
+           { 'id': 2, 'itemName': 'Item 02', 'itemVersion': 'test02' },
+           { 'id': 3, 'itemName': 'Item 03', 'itemVersion': 'test03' },
+        ];
+        var cols1 = [
+            { field: 'id', title: 'ITEM ID' ,'width':100 },
+            { field: 'itemName', title: 'Item Name','width':100 },
+            { field: 'itemVersion', title: 'Item Version','width':100 },  
+            { field: 'Actions', title: '功能','width':300,formatter: "$UiAction.table.table1.OperateFormatter",events: "$UiAction.table.table1.OperateEvents"}              
+        ];
+        var btn={
+           table0BTN:[{clsna:'btndel',val:'刪除'},{clsna:'btnview',val:'中分類檢視'}],
+           table1BTN:[{clsna:'btndel',val:'刪除'},{clsna:'btnview',val:'項目檢視'}],
+           table2BTN:[{clsna:'btndel',val:'刪除'},{clsna:'btnview',val:'項目檢視'}],
+        };        
+       
+        //欄位格式和功能事件處理
+        var $UiActionFunc={
+            table:{
+                table0:{
+                    OperateFormatterFunc:function(value, row, index){
+                        let res='';
+                        btn.table0BTN.forEach(function (item, index) {
+                            res += `<input type="button" class="${item.clsna}" value="${item.val}"> `;
+                        });
+                        return res;
+                    },
+                    OperateEventsFunc: function (e, value, row, index, key) {
+                        let elname = '';
+                        let newVal = '';
+                        switch (key) {
+                            case 'Actions-del':
+                                //需要重整畫面TABLE
+                                break;
+                            case 'Actions-copy':
+                                //需要重整畫面TABLE
+                                break;
+                            case 'Actions-view':
+                                //需要重整畫面TABLE
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                },
+                table1:{
+                    OperateFormatterFunc:function(value, row, index){
+                        let res='';
+                        btn.table1BTN.forEach(function (item, index) {
+                            res += `<input type="button" class="${item.clsna}" value="${item.val}"> `;
+                        });
+                        return res;
+                    },
+                    OperateEventsFunc: function (e, value, row, index, key) {
+                        let elname = '';
+                        let newVal = '';
+                        switch (key) {
+                            case 'Actions-del':
+                                //需要重整畫面TABLE
+                                break;
+                            case 'Actions-copy':
+                                //需要重整畫面TABLE
+                                break;
+                            case 'Actions-view':
+                                //需要重整畫面TABLE
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                },
+                table3:{}
+            },
+        };
+        //Action:button list and event
+        var $UiAction = {
+                table: {
+                    table0: {                                        
+                        OperateFormatter: function (value, row, index) {                           
+                            return $UiActionFunc.table.table0.OperateFormatterFunc(value, row, index);
+                        },
+                        OperateEvents: {
+                            'click .btndel': function (e, value, row, index) {
+                                $UiActionFunc.table.table0.OperateEventsFunc(e, value, row, index, 'Actions-del');
+                            },
+                            'click .btncopy': function (e, value, row, index) {
+                                $UiActionFunc.table.table0.OperateEventsFunc(e, value, row, index, 'Actions-copy');
+                            },
+                            'click .btnview': function (e, value, row, index) {
+                                $UiActionFunc.table.table0.OperateEventsFunc(e, value, row, index, 'Actions-view');
+                            }
+                        }
+                    },
+                    table1: {
+                        OperateFormatter: function (value, row, index) {
+                            return $UiActionFunc.table.table1.OperateFormatterFunc(value, row, index);
+                        },
+                        OperateEvents: {
+                            'click .btndel': function (e, value, row, index) {
+                                $UiActionFunc.table.table1.OperateEventsFunc(e, value, row, index, 'Actions-del');
+                            },
+                            'click .btncopy': function (e, value, row, index) {
+                                $UiActionFunc.table.table1.OperateEventsFunc(e, value, row, index, 'Actions-copy');
+                            },
+                            'click .btnview': function (e, value, row, index) {
+                                $UiActionFunc.table.table1.OperateEventsFunc(e, value, row, index, 'Actions-view');
+                            }
+                        }
+                    },
+                    table3:{},
+                  
+                },
+
+
+            };
+        // 直接異動bootstrapTable,其實UI每一列都會被重寫一次,這樣沒辦法很連續操作table裡的元件，        
+         // 這寫法適合跳出POP視窗，然後異動table        
+        function GridRowCRUD(idx, val, fid, row, key) {
+                switch (key) {
+                    case 'U':
+                        $table.bootstrapTable('updateCell', { index: idx, field: fid, value: val });
+                        //console.log( JSON.stringify($table.bootstrapTable('getData')) );
+                        break;
+                    case 'I':
+                        $table.bootstrapTable('insertRow', { index: idx, row: row });
+                        break;
+                    case 'D':
+                        $table.bootstrapTable('remove', { field: fid, values: val });
+                        break;
+                    default:
+                        break;
+                }
+            }
+        $(function () {
+             //初始化
+             $table0.bootstrapTable({ columns: cols0,  data: data0  });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   
+</head>
+<body>
+    <div id="newtest"></div>
+    <template id="tmpl01">
+        <P>樣板01</P>
+        <P>樣板測試</P>
+    </template>
+    <template id="tmpl02">
+        <P>樣板02</P>
+        <P>樣板測試</P>
+    </template>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(function(){
+            var tmp01=$("#tmpl01").contents(0);
+           console.log(tmp01);
+            $("#newtest").append(tmp01).clone(true);
+
+            var tmp02=$("#tmpl02").contents(0);
+            tmp02.appendTo('body');
+        });
+           
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES5 test</title>
+</head>
+<body>
+    <p>Array/Object操作方法</p>
+ <region>
+     <p></p>
+     <p></p>
+     <p></p>
+     <input type="text">
+ </region>
+ <region>
+     <p></p>
+     <p></p>
+     <p></p>
+     <input type="text">
+ </region>
+ <region>
+     <p></p>
+     <p></p>
+     <p></p>
+     <input type="text">
+ </region>
+    <region>
+        <p>Object.keys(JSONObject)</p> 
+        <p>回傳一個新的陣列其值為 Object 的 key 。</p>
+        <p>範例：obj2={ val: "1", txt: "我是項目01" };</p>
+        <input type="text" id="ObjKeys" value="">
+    </region>
+    
+    
+    <script>
+        var obj2={ val: "1", txt: "我是項目01" };        
+        var keys=Object.keys(obj2);
+        var el=document.querySelector("#ObjKeys");
+        //console.log(el);
+        el.value=keys; 
+        //console.log(keys);
+    </script>
+</body>
+</html>

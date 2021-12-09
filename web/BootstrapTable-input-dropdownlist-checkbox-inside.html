@@ -63,13 +63,13 @@
         var ddlist=[{ val: '', txt: '請選擇' },{ val: '1', txt: '符合' }, { val: '2', txt: '建議事項' }, { val: '3', txt: '缺失' }, { val: '4', txt: '不符合' }, { val: '5', txt: '不適用' }];
         var rdolist = [{ val: '1', txt: '符合' }, { val: '2', txt: '不符合' }, { val: '3', txt: '不適用' }];
         //bootstrapTable 內嵌元件
-        function OperateFormatterFunc(value, row, index, element,colname) {
+        function OperateFormatterFunc(value, row, index, element, colname) {
                 let res = '';
-                let elid ='';
+                let elid = '';
                 switch (element) {
                     case 'checkbox':
                         elid = `chk-${colname}-${index}`;
-                        res = `<input type="checkbox" id="${elid}" class="chk" ${value===1?checked="checked":""}>`;
+                        res = `<input type="checkbox" id="${elid}" class="chk" ${value === 1 ? checked = "checked" : ""}>`;
                         break;
                     case 'textarea':
                         elid = `txt-${index}`;
@@ -80,30 +80,32 @@
                         rdolist.forEach(
                             itm => {
                                 elid = `${String(index) + '-' + itm.val}`;
-                                res += `<input type="radio" class="rdo" id="${elid}" name="gp${index}" value="${itm.val}" ${itm.val === row.Result? checked="checked":""}><label for="${elid}">${itm.txt}</label><br>`;
-                               
+                                res += `<input type="radio" class="rdo" id="${elid}" name="gp${index}" value="${itm.val}" ${itm.val === row.Result ? checked = "checked" : ""}><label for="${elid}">${itm.txt}</label><br>`;
+
                             });
                         break;
                     case 'dropdownlist':
-                       elid = `drp-${index}`;
-                       res=`<select id="${elid}" class="drp">`
-                        ddlist.forEach(itm=>{                      
-                            res+=`<option value="${itm.val}" ${itm.val === row.drpRes? selected="selected":""}>${itm.txt}</option>`;                       
-                       });
-                       res+=`</select>`
-                    break;
+                        elid = `drp-${index}`;
+                        res = `<select id="${elid}" class="drp">`
+                        ddlist.forEach(itm => {
+                            res += `<option value="${itm.val}" ${itm.val === row.drpRes ? selected = "selected" : ""}>${itm.txt}</option>`;
+                        });
+                        res += `</select>`
+                        break;
+                    case 'btnlist':
+                        break;
                     default:
-                       res = '';
+                        res = `<input type="button" class="btndel" value="刪除"><input type="button" class="btncopy" value="複製"><input type="button" class="btnview" value="檢視">`;
                         break;
                 }
                 return res;
             }
-         
+        
          //bootstrapTable 操作內嵌元件取值
          function OperateEventsFunc(e, value, row, index, key) {
                 let elname = '';
                 let newVal = '';
-
+                
                 switch (key) {
                     case 'Result':
                         elname = `input[type=radio][name=gp${index}]:checked`;
@@ -116,12 +118,13 @@
                     case 'DOC1':
                     case 'DOC2':
                     case 'DOC3':
-                        elname = `#chk-${key}-${index}`;                       
-                        newVal = $(elname).prop('checked')==true? 1:0;                      
+                        elname = `#chk-${key}-${index}`;
+                        newVal = $(elname).prop('checked') == true ? 1 : 0;
                         break;
                     case 'drpRes':
                         elname = `#drp-${index} option:selected`;
-                        newVal =$(elname).val();
+                        newVal = $(elname).val();
+                   
                     default:
                         break;
                 };
@@ -213,7 +216,7 @@
                     }
                 }
             };
-
+       
         
          // 直接異動bootstrapTable,其實UI每一列都會被重寫一次,這樣沒辦法很連續操作table裡的元件，        
          // 這寫法適合跳出POP視窗，然後異動table        

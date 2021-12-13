@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>按鈕切換下拉元件的項目</title>
 </head>
+
 <body>
     <p>這是模擬透過按鈕可以自動往下一個項目切換</p>
     <select id="sel01">
@@ -15,68 +17,108 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
-          var data01 = [];//下拉元件1資料
-          var pagelist = [];//模擬頁碼資料清單，給button 比對使用
-          //資料製作
-        for (let idx = 1; idx <= 5; idx++) {
-            data01.push({ val: idx, txt: 'item' + String(idx) });
-        }
-        $.each(data01, function (index, itm) {
-            pagelist.push(itm.val);
-        }); 
+        //資料類
+        var $UiData = {
+            //下拉資料
+            data01: [],
+            //頁數資料
+            pagelist: [],
+            //頁碼索引
+            pageindex: 0,
+            //頁碼總數
+            PageCount: 0,
+            //值改變紀錄
+            changeval: 0,
+            UItypeRecord: '',
+            fnSetData: function () {
+                //data01 set
+                for (let idx = 1; idx <= 5; idx++) {
+                    this.data01.push({ val: idx, txt: 'item' + String(idx) });
+                }
+                //pagelist set
+                this.data01.forEach(itm => {
+                    this.pagelist.push(itm.val);
+                });
+                //總頁數 set
+                this.PageCount = this.pagelist.length;
+            },
+        };
+        //UI控制類
+        var $UiList = {
+            sel01: $("#sel01"),
+            btnNext: $("#btnNext"),
+            fnSel01: function () {
+                //console.log(this.sel01);
+                this.sel01.empty(this.sel01);
+                this.sel01.append('<option value="">請選擇</option>');
+                //初始化下拉元件
+                let drpOpt = '';
+                $UiData.data01.forEach(function (itm, index) {                    
+                    drpOpt += '<option value="' + itm.val + '">' + itm.txt + '</option>';
+                });
+                this.sel01.append(drpOpt);
+                //設定下拉元件綁定事件
+                this.sel01.on('click', function () {
+                    $UiData.UItypeRecord = 'drp';
+                });
+
+                let that = this.btnNext;
+                this.sel01.on('change', function () {
+                    /* 這邊可以透過AJAX傳送資料去後台讀取GRID資料 */
+                    let newchangeval = $('#' + this.id + ' option:selected').val();
+                    $UiData.changeval = parseInt(newchangeval,10);
+                  
+                    //下拉元件也要更改紀錄
+                    if ($UiData.UItypeRecord == 'drp') {                      
+                        let dataIndex = $UiData.pagelist.indexOf($UiData.changeval);
+                      
+                        //set btn data
+                        that.data('pageindex', dataIndex);
+                    }
+                });
+            },
+            fnbtnNext: function () {
+                //下拉元件
+                let that = this.sel01;
+                //按鈕事件綁定
+                this.btnNext.click(function (e) {
+                    e.preventDefault();
+                    $UiData.UItypeRecord = 'btn';
+                    //get btn data
+                    let idx = $(this).data('pageindex');
+                    //console.log('btn-idx:' + idx);
+                    let newidx = idx + 1;
+                    //確認頁數到底與否?
+                    if (newidx <= $UiData.PageCount - 1) {
+                        //新資料位置  
+                        $UiData.pageindex = newidx;
+                        //set btn data
+                        $(this).data('pageindex', newidx);
+                        //取出下一份資料 
+                        d01 = $UiData.pagelist[$UiData.pageindex];
+                        //設定下拉元件
+                        if ($UiData.changeval != d01) {
+                            that.val(d01).change();
+                        }
+                    }
+                    else {
+                        alert('已經達最終項目');
+                    }
+                });
+            }
+        };
+
         $(function () {
-            var pageindex=0;
-            var PageCount = pagelist.length;
-            var changeval=0;
-            var UItypeRecord='';
-            
-            //***************************************************************************************
-            $("#sel01").empty();
-            $('#sel01').append('<option value="">請選擇</option>');
-            $.each(data01, function (index, itm) {
-                $('#sel01').append('<option value="' + itm.val + '">' + itm.txt + '</option>');
-            });
-            //****************************************************************************************
-
-            $("#sel01").on('click',function(){
-                UItypeRecord='drp';
-                //console.log('UItypeRecord:'+UItypeRecord);
-            });
-
-            $("#sel01").on('change', function () {
-                /* 這邊可以透過AJAX傳送資料去後台讀取GRID資料 */
-            });
-            $("#btnNext").click(function (e) { 
-                e.preventDefault();
-                UItypeRecord='btn';
-
-                //get btn data
-                let idx=$(this).data('pageindex');             
-                let newidx=idx+1;
-        
-                if(newidx<=PageCount-1){
-                    //新資料位置  
-                    pageindex=newidx;
-                    //set btn data
-                    $(this).data('pageindex', newidx); 
-                    //取出下一份資料 
-                    d01=pagelist[pageindex];
-                   //設定下拉元件
-                    if(changeval != d01){
-                        $("#sel01").val(d01).change();
-                    }  
-                    
-                    //console.log('btn-next-pageindex='+pageindex+',obj='+pagelist[pageindex]+',Record:{changeval='+changeval+'}');
-                }  
-                else {
-                    alert('已經達最終項目');
-                }              
-            });
-
+            //資料設定
+            $UiData.fnSetData();
+            //初始化下拉元件
+            $UiList.fnSel01();
+            $UiList.fnbtnNext();
             //初值
-            $("#sel01").val(1).change();
-            $("#btnNext").data('pageindex', pageindex);
+            $UiList.sel01.val(1).change();
+            $UiList.btnNext.data('pageindex', $UiData.pageindex);
         });
     </script>
 </body>
+
 </html>

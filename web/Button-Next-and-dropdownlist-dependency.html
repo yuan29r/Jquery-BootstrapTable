@@ -34,15 +34,15 @@
             }
         });
         $.each(data02, function (index, itm) {
-            pagelist.push({ d01: itm.d01, d02:itm.val });
-        });       
+            pagelist.push({ d01: itm.d01, d02: itm.val });
+        });
 
         $(function () {
-            var pageindex=0;
+            var pageindex = 0;
             var PageCount = pagelist.length;
-            var changeval=0;
-            var changeval2=0;
-            var UItypeRecord='';
+            var changeval = 0;
+            var changeval2 = 0;
+            var UItypeRecord = '';
             //console.log(PageCount);
 
             //***************************************************************************************
@@ -52,24 +52,20 @@
                 $('#sel01').append('<option value="' + itm.val + '">' + itm.txt + '</option>');
             });
             //****************************************************************************************
-            $("#sel01").on('click',function(){
-                UItypeRecord='drp';
-                //console.log('UItypeRecord:'+UItypeRecord);
+            $("#sel01").on('click', function () {
+                UItypeRecord = 'drp';
+
             });
             $("#sel01").on('change', function () {
                 $("#sel02").empty();
-                
+
                 let newchangeval = $('#' + this.id + ' option:selected').val();
-                // console.log('newchangeval:'+newchangeval);
-                // console.log('changeval:'+changeval);
 
                 //篩選sel02資料
                 let newData = $.grep(data02, function (item, index) {
-                    return item.d01 == newchangeval
+                    return item.d01 == newchangeval;
                 });
 
-                
-               
                 //初始化下拉元件
                 if (changeval != newchangeval) {
                     $('#sel02').append('<option value="">請選擇</option>');
@@ -77,62 +73,62 @@
                         $('#sel02').append('<option value="' + itm.val + '">' + itm.txt + '</option>');
                     });
 
-                    //console.log('pagelist-d02:' + pagelist[pageindex]['d02'] + ',pageindex:' + pageindex);
-                    if (UItypeRecord == 'drp') { 
-                        changeval2 = newData[0]['val'];                                           
-                         var dataIndex=pagelist.map(function(itm){                           
-                            return ''+itm.d01+'-'+itm.d02;
-                        }).indexOf(''+newchangeval+'-'+changeval2);
+                    //下拉元件change,也是需要異動btn data-pageindex
+                    if (UItypeRecord == 'drp') {
+                        changeval2 = newData[0]['val'];
+                        var dataIndex = pagelist.map(function (itm) {
+                            return '' + itm.d01 + '-' + itm.d02;
+                        }).indexOf('' + newchangeval + '-' + changeval2);
                         //console.log('dataIndex='+dataIndex);
                         $("#btnNext").data('pageindex', dataIndex);
-                        $('#sel02').val(changeval2).change(); 
-                    }
-                    else { 
-                                           
-                        $("#btnNext").data('pageindex', pageindex);
-                        changeval2 = pagelist[pageindex]['d02'];                     
                         $('#sel02').val(changeval2).change();
-                    }                  
+                    }
+                    else {
+
+                        $("#btnNext").data('pageindex', pageindex);
+                        changeval2 = pagelist[pageindex]['d02'];
+                        $('#sel02').val(changeval2).change();
+                    }
                     changeval = newchangeval;
                 }
             });
 
             $("#sel02").on('change', function () {
-                ddl01=$("#sel01 option:selected").val();
-                ddl02=$("#"+this.id+' option:selected').val();                 
-                changeval2=ddl02;
+                ddl01 = $("#sel01 option:selected").val();
+                ddl02 = $("#" + this.id + ' option:selected').val();
+                changeval2 = ddl02;
                 //console.log('sel02-change:{'+'ddl01:'+ddl01+'ddl02:'+ddl02+'}');
                 /* 這邊就可以傳送ddl01和ddl02透過AJAX去要GRID資料 */
-             });
+            });
 
-            $("#btnNext").click(function (e) { 
+            $("#btnNext").click(function (e) {
                 e.preventDefault();
-                UItypeRecord='btn';
-                
+                UItypeRecord = 'btn';
+
                 //get btn data
-                let idx=$(this).data('pageindex');            
-                let newidx=idx+1;
-        
-                if(newidx<=PageCount-1){  
+                let idx = $(this).data('pageindex');
+                let newidx = idx + 1;
+
+                if (newidx <= PageCount - 1) {
                     //新資料位置                  
-                    pageindex=newidx;
+                    pageindex = newidx;
                     //set btn data
                     $(this).data('pageindex', newidx);
                     //取出下一份資料 
-                    d01=pagelist[pageindex]['d01'];
-                    d02=pagelist[pageindex]['d02'];
+                    d01 = pagelist[pageindex]['d01'];
+                    d02 = pagelist[pageindex]['d02'];
                     //設定下拉元件
-                    if(changeval != d01){
+                    if (changeval != d01) {
                         $("#sel01").val(d01).change();
-                    }   
-                    if(changeval2 != d02){
+                    }
+                    if (changeval2 != d02) {
                         $("#sel02").val(d02).change();
                     }
                     //console.log('btn-next-pageindex='+pageindex+',obj='+JSON.stringify(pagelist[pageindex])+',Record:{changeval='+changeval+'changeval2:'+changeval2+'}');
-                }  
+                }
                 else {
                     alert('已經達最終項目');
-                }              
+                }
             });
 
             //初值

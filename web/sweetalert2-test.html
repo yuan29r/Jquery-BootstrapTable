@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="D:/max/javascript-test/JAVASCRIPT-UI-test/web/Scripts/sweetalert2/sweetalert2.min.css">
+</head>
+
+<body>
+    <input type="button" id="alertMsg" value="提示訊息"></input>
+    <input type="button" id="alertErr" value="錯誤訊息"></input>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="D:/max/javascript-test/JAVASCRIPT-UI-test/web/Scripts/sweetalert2/promise.min.js"></script>
+    <script src="D:/max/javascript-test/JAVASCRIPT-UI-test/web/Scripts/sweetalert2/sweetalert2.min.js"></script>
+    <script type="text/javascript">
+        var swalobj = {
+            alertMsg: function (value) {
+                swal(value);
+            },
+            alertErr: function (value) {
+                swal(
+                    {type: "error",
+                        title: "錯誤訊息",
+                        text: value,
+                        
+                       
+                    }
+                );
+            }
+
+        };
+        $(function () {
+            $('#alertMsg').click(function (e) {
+                e.preventDefault();
+                swalobj.alertMsg('Good job!\r\n You clicked the button!\r\nsuccess');
+            });
+            $('#alertErr').click(function (e) {
+                e.preventDefault();
+                swalobj.alertErr('出現錯誤!');
+            });
+        });
+
+    </script>
+</body>
+
+</html>

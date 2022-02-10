@@ -16,31 +16,37 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="D:/max/javascript-test/JAVASCRIPT-UI-test/web/Scripts/sweetalert2/promise.min.js"></script>
     <script src="D:/max/javascript-test/JAVASCRIPT-UI-test/web/Scripts/sweetalert2/sweetalert2.min.js"></script>
+    <!--sweetalert2 公司這個版本完全不像是2代的 -->
     <script type="text/javascript">
         var swalobj = {
-            alertMsg: function (value) {
-                swal(value);
+            alertInfo: function (value) {
+                swal({type: "info",title: "訊息", text:value  });
             },
-            alertErr: function (value) {
+            alertError: function (value) {
                 swal(
-                    {type: "error",
-                        title: "錯誤訊息",
-                        text: value,
-                        
-                       
-                    }
+                    {type: "error", title: "錯誤", text: value, }
                 );
-            }
+            },
+            alertSuccess: function (value) {
+                swal(
+                    {type: "success", title: "成功",text: value, }
+                );
+            },
+            alertWarning:function (value) {
+                swal(
+                    {type: "warning", title: "警告",text: value, }
+                );
+            },
 
         };
         $(function () {
             $('#alertMsg').click(function (e) {
                 e.preventDefault();
-                swalobj.alertMsg('Good job!\r\n You clicked the button!\r\nsuccess');
+                swalobj.alertInfo('Good job!\r\n You clicked the button!\r\nsuccess');
             });
             $('#alertErr').click(function (e) {
                 e.preventDefault();
-                swalobj.alertErr('出現錯誤!');
+                swalobj.alertError('出現錯誤!');
             });
         });
 
